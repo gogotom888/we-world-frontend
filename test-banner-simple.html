@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Banner Test</title>
+    <style>body{font-family:monospace;padding:20px;background:#111;color:#0f0;}</style>
+</head>
+<body>
+    <h1>Banner API 簡易測試</h1>
+    <div id="result"></div>
+    <script>
+        fetch('/api/banners?populate=*')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('result').innerHTML = 
+                    '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            })
+            .catch(e => {
+                document.getElementById('result').innerHTML = 
+                    '<span style="color:red">ERROR: ' + e.message + '</span>';
+            });
+    </script>
+</body>
+</html>

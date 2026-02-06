@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API 全面診斷</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #1a1a1a; color: #fff; }
+        .api-test { margin: 15px 0; padding: 15px; border-radius: 8px; }
+        .success { background: #1a4d2e; }
+        .error { background: #4d1a1a; }
+        .loading { background: #4d4d1a; }
+        .status { font-weight: bold; margin-right: 10px; }
+        pre { background: #000; padding: 10px; border-radius: 4px; overflow-x: auto; font-size: 12px; }
+        button { padding: 10px 20px; background: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer; margin: 10px 0; }
+        button:hover { background: #1976D2; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Strapi API 全面診斷工具</h1>
+    <button onclick="runAllTests()">🚀 執行所有測試</button>
+    <div id="results"></div>
+
+    <script>
+        const APIs = [
+            { name: 'Banner', url: '/api/banners?populate=*&sort=sort_order:asc&filters[is_active][$eq]=true' },
+            { name: 'About Section', url: '/api/about-section?populate=*' },
+            { name: 'About Page', url: '/api/about-page?populate=*' },
+            { name: 'Services', url: '/api/services?populate=*&sort=sort_order:asc' },
+            { name: 'News Items', url: '/api/news-items?populate=*&sort=createdAt:desc' },
+            { name: 'Products', url: '/api/products?populate=*&sort=id:asc' },
+            { name: 'Product Categories', url: '/api/product-categories?sort=sort_order:asc' },
+            { name: 'Process Page', url: '/api/process-page?populate=*' }
+        ];
+
+        async function testAPI(api) {
+            const resultDiv = document.getElementById(api.name.replace(' ', '_'));
+            resultDiv.className = 'api-test loading';
+            resultDiv.innerHTML = `<div class="status">⏳ 測試中...</div>${api.name}: ${api.url}`;
+
+            try {
+                const response = await fetch(api.url);
+                const text = await response.text();
+                
+                console.log(`API: ${api.name}`, {
+                    status: response.status,
+                    statusText: response.statusText,
+                    contentType: response.headers.get('content-type'),
+                    textLength: text.length,
+                    textPreview: text.substring(0, 100)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                if (!text || text.trim() === '') {
+                    throw new Error('響應為空');
+                }
+
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    throw new Error(`JSON 解析失敗: ${text.substring(0, 50)}`);
+                }
+
+                const dataCount = data.data ? (Array.isArray(data.data) ? data.data.length : 1) : 0;
+                
+                resultDiv.className = 'api-test success';
+                resultDiv.innerHTML = `
+                    <div class="status">✅ 成功</div>
+                    <strong>${api.name}</strong><br>
+                    URL: ${api.url}<br>
+                    Status: ${response.status} ${response.statusText}<br>
+                    數據量: ${dataCount} 筆<br>
+                    響應大小: ${text.length} bytes<br>
+                    <details>
+                        <summary>查看響應 (點擊展開)</summary>
+                        <pre>${JSON.stringify(data, null, 2).substring(0, 500)}...</pre>
+                    </details>
+                `;
+            } catch (error) {
+                resultDiv.className = 'api-test error';
+                resultDiv.innerHTML = `
+                    <div class="status">❌ 失敗</div>
+                    <strong>${api.name}</strong><br>
+                    URL: ${api.url}<br>
+                    錯誤: ${error.message}<br>
+                    <pre>${error.stack}</pre>
+                `;
+            }
+        }
+
+        async function runAllTests() {
+            document.getElementById('results').innerHTML = APIs.map(api => 
+                `<div id="${api.name.replace(' ', '_')}" class="api-test loading">⏳ 等待測試...</div>`
+            ).join('');
+
+            for (const api of APIs) {
+                await testAPI(api);
+                await new Promise(resolve => setTimeout(resolve, 300)); // 延遲避免請求過快
+            }
+        }
+
+        // 頁面載入時自動測試
+        window.onload = () => runAllTests();
+    </script>
+</body>
+</html>

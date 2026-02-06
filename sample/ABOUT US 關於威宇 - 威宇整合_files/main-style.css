@@ -1,0 +1,110 @@
+@charset "utf-8";/*==【基本設定】==*/
+html{font-size:100%;}
+html,body,div,p,input,form,fieldset,figure{margin:0;padding:0;list-style:none;}
+address,caption,cite,code,dfn,em,var{font-style:normal;font-weight:normal;}
+button,input,textarea,select{font-family:Arial;font-size:100%;margin:0;vertical-align:baseline;*vertical-align:middle;}
+button,input{line-height:normal;*overflow:visible;}
+table button,table input{*overflow:auto;}
+button,input[type="button"],input[type="reset"],input[type="submit"]{cursor:pointer;-webkit-appearance:button;}
+object,embed{outline:0;}
+caption{text-align:left;}
+table{border-collapse:collapse;border-spacing:0;}
+img{border:0px;-ms-interpolation-mode:bicubic;vertical-align:middle;}
+em{font-family:Arial;}
+del{color:#999;}
+br{clear:both;}
+p{word-wrap:break-word;}
+blockquote{margin-top:0;margin-bottom:10px;}
+a,img{text-decoration:none;color:#69C;outline:none;behavior:expression(this.onFocus=this.blur());}
+a:hover,img:hover{color:#225E86;text-decoration:none;}
+a,a:hover{-webkit-transition:all .35s ease-in-out;-moz-transition:all .35s ease-in-out;-o-transition:all .35s ease-in-out;-ms-transition:all .35s ease-in-out;transition:all .35s ease-in-out;}
+body{font:13px/1.431 Arial,Helvetica,sans-seriff;}
+::-webkit-input-placeholder{color:666;}:-moz-placeholder{color:#666;}::-moz-placeholder{color:#666;}:-ms-input-placeholder{color:#666;}
+
+/*==【HTML5基本設定】==*/
+article,aside,details,figcaption,figure,footer,header,hgroup,nav,section{display:block;}
+audio,canvas,video{display:inline-block;*display:inline;*zoom:1;}
+audio:not([controls]){display:none;}[hidden]{display:none;}
+
+/*==【印刷樣式】==*/
+abbr[title]{border-bottom:1px dotted;}
+b,strong{font-weight:bold;}
+blockquote{margin:1em 40px;}
+dfn{font-style:italic;}
+hr{display:block;height:1px;border:0;border-top:1px solid #ccc;margin:1em 0;padding:0;}
+ins{background:#ff9;color:#000;text-decoration:none;}
+mark{background:#ff0;color:#000;font-style:italic;font-weight:bold;}
+
+/*==【重新宣告固定寬度字體系列】==*/
+pre,code,kbd,samp{font-family:monospace,monospace;_font-family:'courier new',monospace;font-size:1em;}
+
+/*==【改善所有瀏覽器中預先格式化之文字的可讀性】==*/
+pre{white-space:pre;white-space:pre-wrap;word-wrap:break-word;}
+q{quotes:none;}
+q:before,q:after{content:"";content:none;}
+small{font-size:85%;}
+
+/*==【放置下標字和上標字內容，而不影響行高】==*/
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline;}
+sup{top:-0.5em;}
+sub{bottom:-0.25em;}
+
+/*==【修正 IE9 中未隱藏的溢位】==*/
+svg:not(:root){overflow:hidden;}
+
+/*==【圖表】==*/
+figure{margin:0;}
+
+/*==【表單】==*/
+form{margin:0;}
+fieldset{border:0;margin:0;padding:0;}
+label{cursor:pointer;}
+legend{border:0;*margin-left:-7px;padding:0;}
+
+/*==【一致的方塊大小和外觀】==*/
+input[type="checkbox"],input[type="radio"]{box-sizing:border-box;}
+input[type="search"]{-webkit-appearance:textfield;-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box;}
+input[type="search"]::-webkit-search-decoration{-webkit-appearance:none;}
+
+/*==【移除 FF3/4 中的內部內距和邊框】==*/
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0;}
+
+/*==【移除 IE6/7/8/9 中的預設垂直捲軸、僅允許垂直調整大小】==*/
+textarea{overflow:auto;resize:vertical;}
+
+/*==【表單有效性的色彩】==*/
+input:valid,textarea:valid{}
+input:invalid,textarea:invalid{background-color:#f0dddd;}
+
+/*==【文字編輯器】==*/
+.Txt{line-height:1.7;margin:0 auto;padding:0;color:#666;text-align:left;font-size:14px;}
+	.Txt h1,.Txt h2,.Txt h3,.Txt h4,.Txt h5,.Txt h6{margin:0;padding:7px 0;}
+	.Txt p{padding:10px 0;}
+	.Txt ul,.Txt ol{margin:2px 0 10px 0 !important;padding-left:20px;overflow:visible !important;}
+	.Txt ul ul,.Txt ol ol,.Txt ul ol,.Txt ol ul{margin-bottom:10px !important;}
+	.Txt ul li,.Txt ol li{padding:2px 0;overflow:visible !important;border:0 !important;}
+	.Txt a{display:inline !important;}.Txt a:hover{text-decoration:underline;}
+	.Txt img{max-width:100%;height:auto !important;}
+
+/*==【clearfix】==*/
+.clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden;}
+*html>body .clearfix{display:inline-block;width:100%;}
+*html .clearfix{height:1%;/* End hide from IE-mac */}
+*+html .clearfix{min-height:1%;/* ie7 hack*/}
+.clear{clear:both;font-size:0px;height:0px;}
+
+ 
+@media print{
+	*{background:transparent !important;color:black !important;text-shadow:none !important;filter:none !important;-ms-filter:none !important;} /* 黑色的列印速度更快:h5bp.com/s */
+	a,a:visited{text-decoration:underline;}
+	a[href]:after{content:" (" attr(href) ")";}
+	abbr[title]:after{content:" (" attr(title) ")";}
+	.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:"";}  /* 不要顯示影像的連結或 javascript/內部連結 */
+	pre,blockquote{border:1px solid #999;page-break-inside:avoid;}
+	thead{display:table-header-group;}
+	tr,img{page-break-inside:avoid;}
+	img{max-width:100% !important;}
+	@page{margin:0.5cm;}
+	p,h2,h3{orphans:3;widows:3;}
+	h2,h3{page-break-after:avoid;}
+}

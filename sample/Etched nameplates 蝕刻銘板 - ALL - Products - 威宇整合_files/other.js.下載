@@ -1,0 +1,161 @@
+// JavaScript Document
+
+var standardUIMin = 960;
+var iPadUIMin = 768;
+var iPhoneUIMax = 480;
+var iPhoneUIMin = 320;
+
+function w(){
+	// ▼算寬度
+	var windowWidth = $(window).width();
+	if(windowWidth <= iPadUIMin){
+	}
+	// ▼算產品內容高度
+	var cont_H = $('.box_bd').height();
+	$('.btnwrap .inbox').css({'height':cont_H});
+	// ▼算手機選單高度
+	var mnav_H = $(window).height()-100;
+	$('.mnav').css({'max-height':mnav_H});
+	// ▼算主內容高度
+	var maincont_H1 = $('#header').height();
+	var maincont_H2 = $('#footer').height();
+	var maincont_H3 = $(window).height()-maincont_H1-maincont_H2-60;
+	$('#content').css({'min-height':maincont_H3});
+}
+
+$(window).resize(function(){
+	w();
+});
+
+$(function(){
+	// ▼resize
+	w();
+	// ▼Header捲動顯示與隱藏
+	var stickyOffset = $('#content').offset().top - 80;
+	$(window).scroll(function(){
+	  	var sticky = $('#header'),
+			scroll = $(window).scrollTop();
+	  	if (scroll > stickyOffset){
+		  	sticky.addClass('fixed');
+		}else{
+			sticky.removeClass('fixed');
+		}
+	});
+	// ▼首頁主選單
+	$('.m_nav').click(function(){
+		$(this).stop(false, true).toggleClass('on');
+		$('.mnav').stop(false, true).slideToggle();
+	});
+	$('.mnav li').hover(function(){
+		var _this = $(this),
+			_subnav = _this.children('.subnav');
+			_subnav.stop(true, true).fadeIn(400);
+			_this.addClass('hv');
+	} , function(){
+		$(this).stop(true, true).removeClass('hv');
+		$(this).children('.subnav').stop(true, true).fadeOut(400);
+	});
+	
+	// ▼產品Slider
+	$('.sliderbox01 .jqslider').iosSlider({desktopClickDrag:true,snapToChildren:true,scrollbar:false,navNextSelector:$('.sliderbox01 .next'),navPrevSelector:$('.sliderbox01 .prev')});
+	$('.sliderbox01 .jqslider li.item span').hover(function(){
+		$(this).stop(false, true).toggleClass('hv');
+	})
+	// ▼stickybox
+	$('.stickybox').portamento({wrapper:$('.btnwrap .inbox')});
+	$('.btns li').hover(
+		function(){
+			$(this).stop(false, true).addClass('hv');
+			$(this).find('i').fadeIn().animate({right:"37px"},{queue:false,duration:300});
+		},
+		function(){
+			$(this).stop(false, true).removeClass('hv');
+			$(this).find('i').fadeOut().animate({right:"0"},{queue:false,duration:300});
+		}
+	)
+	//圖片預覽
+	$('.simg a').hover(function(){
+		var imgsrc = $(this).find('img').attr("src");
+		if ($(this).hasClass('on')){
+		  	return false;
+		}else{
+			$(this).parent().parent().find(".bimg img").fadeOut(function(){$(this).attr('src',imgsrc).fadeIn()});
+		}
+		$(this).parent().find("a").stop(false, true).removeClass('on');
+		$(this).stop(false, true).addClass('on');
+		
+		
+	});
+	/* ▼頁籤
+	var _showTab = 0;
+	var $defaultLi = $('.tab_hd li').eq(_showTab).addClass('on');
+	$($defaultLi.find('a').attr('href')).siblings().hide();
+	$('.tab_hd li').click(function(){
+		var $this = $(this),
+			_clickTab = $this.find('a').attr('href');
+		$this.addClass('on').siblings('.on').removeClass('on');
+		$(_clickTab).stop(false, true).fadeIn().siblings().hide();
+		if($(window).width()<=750){
+			$('html, body').animate({scrollTop:$(_clickTab).offset().top}, 500);
+		}
+		return false;
+	}).find('a').focus(function(){
+		this.blur();
+	});
+	*/
+	// ▼Hover addclass hv
+	$('.list01 li').hover(function(){
+		$(this).stop(false, true).addClass('hv');
+	},function(){
+		$(this).stop(false, true).removeClass('hv');
+	});
+	// ▼Fancybox
+	$('.fancybox').fancybox();
+	$('.fancybox.pop_fybox').fancybox({
+		'maxWidth':800
+	});
+	$(".youtube").fancybox({
+		helpers : {
+			title   : {
+				type: 'outside'
+			},
+			thumbs  : {
+				width   : 75,
+				height  : 75
+			}
+		}
+	});
+	// ▼chosen
+	$(".chosen-select").chosen();
+	$(".chosen-select02").chosen({disable_search_threshold:10});
+	// ▼產品 Tablist
+	var mySwiper = new Swiper('.tablist',{
+		slidesPerView:'auto',
+		grabCursor:true,
+		paginationClickable: true,
+	})
+	$('.tab-left').on('click', function(e){
+		e.preventDefault()
+		mySwiper.swipePrev()
+	})
+	$('.tab-right').on('click', function(e){
+		e.preventDefault()
+		mySwiper.swipeNext()
+	})
+})
+$(window).load(function(){
+	// ▼產品 Tablist
+	var mySwiper = new Swiper('.tablist',{
+		slidesPerView:'auto',
+		grabCursor:true,
+		paginationClickable: true,
+	})
+	$('.tab-left').on('click', function(e){
+		e.preventDefault()
+		mySwiper.swipePrev()
+	})
+	$('.tab-right').on('click', function(e){
+		e.preventDefault()
+		mySwiper.swipeNext()
+	})
+})

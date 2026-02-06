@@ -1,0 +1,17 @@
+{
+  "proxyMode": "system",
+  "httpProxy": "",
+  "endpoint": "",
+  "commandAllowList": "",
+  "commandDenyList": "rm,mv,sudo,wget,curl,chown",
+  "mcpAutoRun": "enable",
+  "terminalRunMode": "autoRun",
+  "webToolsExecutionMode": "enabledAskEveryTime",
+  "askModeUseTools": "true",
+  "editFileTool": "true",
+  "preferredLanguage": "zh-cn",
+  "enableAutoMemory": true,
+  "planModeRunConfig": "askEveryTime",
+  "browserRunMode": "enabledAskEveryTime",
+  "browserToolsRunMode": "enabledAutoRun"
+}

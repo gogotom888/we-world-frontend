@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>We-World | Precision Engineering</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@700;800;900&family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              // 工业铭版专用配色
+              primary: "#9FC7DB",           // 工业蓝灰
+              secondary: "#E3F0FA",         // 浅雾蓝
+              base: "#FFFFFF",              // 纯白
+              accent: "#000000",            // 工业黑
+              "industrial-blue": "#9FC7DB",
+              "mist-blue": "#E3F0FA",
+              "industrial-black": "#000000",
+              "text-dark": "#2E2E2E",
+              "text-gray": "#555555",
+              "hover-blue": "#88B6CF",
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              display: ["Montserrat", "Inter", "sans-serif"],
+              body: ["Roboto", "Inter", "sans-serif"],
+              mono: ["Roboto Mono", "monospace"],
+              serif: ["Playfair Display", "Georgia", "serif"],
+            },
+            maxWidth: {
+              'content': '1280px',
+            },
+          },
+        },
+      };
+    </script>
+    <style type="text/tailwindcss">
+      @layer base {
+        body {
+          @apply font-sans antialiased transition-colors duration-300;
+        }
+        h1, h2, h3 {
+          @apply tracking-tight;
+        }
+      }
+      /* Hide scrollbar for Chrome, Safari and Opera */
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      /* Hide scrollbar for IE, Edge and Firefox */
+      .scrollbar-hide {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+      }
+      .logo-swoosh {
+        position: absolute;
+        top: 55%;
+        left: 50%;
+        width: 160%;
+        height: 120%;
+        border: 1.5px solid currentColor;
+        border-radius: 50%;
+        transform: translate(-45%, -50%) rotate(-25deg) skewX(-20deg);
+        pointer-events: none;
+        opacity: 0.8;
+      }
+      .globe-gradient {
+        background: conic-gradient(
+          #ef4444 0deg 120deg, 
+          #22c55e 120deg 240deg, 
+          #0056b3 240deg 360deg
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

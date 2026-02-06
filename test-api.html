@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Banner API Test</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1a1a1a; color: #fff; }
+        pre { background: #2a2a2a; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        .success { color: #4ade80; }
+        .error { color: #f87171; }
+        .warning { color: #fbbf24; }
+        button { padding: 10px 20px; margin: 10px 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Banner API 診斷工具</h1>
+    
+    <button onclick="testAPI()">測試 API</button>
+    <button onclick="testPermissions()">測試權限</button>
+    <button onclick="checkDatabase()">檢查資料</button>
+    
+    <div id="output"></div>
+
+    <script>
+        const output = document.getElementById('output');
+        
+        function log(msg, type = 'info') {
+            const className = type === 'success' ? 'success' : type === 'error' ? 'error' : type === 'warning' ? 'warning' : '';
+            output.innerHTML += `<div class="${className}">${msg}</div>`;
+        }
+        
+        function clear() {
+            output.innerHTML = '';
+        }
+
+        async function testAPI() {
+            clear();
+            log('📡 測試 Banner API...', 'info');
+            
+            try {
+                const url = '/api/banners?populate=*&sort=sort_order:asc&filters[is_active][$eq]=true';
+                log(`Request URL: ${url}`, 'info');
+                
+                const response = await fetch(url);
+                log(`Response Status: ${response.status} ${response.statusText}`, 
+                    response.ok ? 'success' : 'error');
+                
+                const data = await response.json();
+                log(`Response Data:`, 'info');
+                log(`<pre>${JSON.stringify(data, null, 2)}</pre>`, 'info');
+                
+                if (data.data && data.data.length > 0) {
+                    log(`✅ 成功獲取 ${data.data.length} 筆 Banner 資料`, 'success');
+                    
+                    data.data.forEach((item, index) => {
+                        log(`Banner ${index + 1}:`, 'info');
+                        log(`  - Title: ${item.attributes.title}`, 'info');
+                        log(`  - Subtitle: ${item.attributes.subtitle}`, 'info');
+                        log(`  - Active: ${item.attributes.is_active}`, 'info');
+                        log(`  - Image URL: ${item.attributes.image_url || 'N/A'}`, 'info');
+                    });
+                } else {
+                    log(`⚠️ API 回應成功但沒有資料`, 'warning');
+                }
+            } catch (error) {
+                log(`❌ API 錯誤: ${error.message}`, 'error');
+                log(`可能原因:`, 'error');
+                log(`1. Strapi 後台未運行`, 'error');
+                log(`2. API 路由未配置`, 'error');
+                log(`3. 網路連接問題`, 'error');
+            }
+        }
+
+        async function testPermissions() {
+            clear();
+            log('🔐 測試權限...', 'info');
+            
+            // 測試無參數的基本 API
+            try {
+                const response = await fetch('/api/banners');
+                log(`基本 API Status: ${response.status}`, response.ok ? 'success' : 'error');
+                
+                if (response.status === 403) {
+                    log(`❌ 權限錯誤 (403 Forbidden)`, 'error');
+                    log(`請檢查: Settings > Roles > Public > BANNER > ✅ find, findOne`, 'error');
+                } else if (response.status === 404) {
+                    log(`❌ API 不存在 (404 Not Found)`, 'error');
+                    log(`請檢查 Banner API routes/controllers/services 是否存在`, 'error');
+                } else if (response.ok) {
+                    log(`✅ 權限正常`, 'success');
+                }
+            } catch (error) {
+                log(`❌ 錯誤: ${error.message}`, 'error');
+            }
+        }
+
+        async function checkDatabase() {
+            clear();
+            log('💾 檢查資料庫狀態...', 'info');
+            log('請在 Strapi 後台檢查:', 'info');
+            log('1. Content Manager → Banner → 是否有資料?', 'info');
+            log('2. 資料是否已發布 (Published)?', 'info');
+            log('3. is_active 是否為 TRUE?', 'info');
+        }
+
+        // 自動執行測試
+        window.onload = () => {
+            setTimeout(testAPI, 500);
+        };
+    </script>
+</body>
+</html>

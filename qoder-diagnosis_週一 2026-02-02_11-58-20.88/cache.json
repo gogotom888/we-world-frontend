@@ -1,0 +1,31 @@
+{
+  "regionEnv": "cn",
+  "regionConfig": {
+    "preferredCenterNode": {
+      "region": "center",
+      "endpoint": "https://center.qoder.sh",
+      "latency": 74
+    },
+    "preferredDataNodeMap": {
+      "codebase": {
+        "region": "https://repo2.qoder.sh",
+        "endpoint": "https://repo2.qoder.sh",
+        "latency": 0
+      }
+    },
+    "preferredInferenceNode": {
+      "region": "api3",
+      "endpoint": "https://api3.qoder.sh",
+      "latency": 41
+    },
+    "preferredNesNode": {
+      "region": "api5",
+      "endpoint": "https://api5.qoder.com.cn",
+      "latency": 77
+    }
+  },
+  "notificationTime": {
+    "quota_low": "2026-01-24T00:00:00+08:00"
+  },
+  "lastWorktreeCleanupTime": 1769997156633
+}
