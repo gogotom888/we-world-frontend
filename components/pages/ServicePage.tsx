@@ -9,117 +9,79 @@ interface ServiceItem {
   features: string[];
 }
 
+interface ServicePageData {
+  title: string;
+  subtitle: string;
+  introduction: string;
+}
+
 const ServicePage: React.FC = () => {
   const [services, setServices] = useState<ServiceItem[]>([]);
+  const [pageData, setPageData] = useState<ServicePageData | null>(null);
   const [loading, setLoading] = useState(true);
   
   const breadcrumbs = [
     { label: 'SERVICE 服務' }
   ];
 
-  // 從後台獲取 Services 資料
+  // 從後台獲取 Service Page 資料
   useEffect(() => {
-    const fetchServices = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('/api/services?populate=*&sort=sort_order:asc');
-        if (!response.ok) throw new Error('Failed to fetch services');
-        const result = await response.json();
-        
-        console.log('Services API Response:', result);
-        
-        if (result.data && result.data.length > 0) {
-          const formattedServices = result.data.map((item: any) => ({
-            id: item.id,
-            title: item.title || '',
-            description: item.description || '',
-            icon: item.icon || 'precision_manufacturing',
-            features: item.features || []
-          }));
-          setServices(formattedServices);
-          console.log('✅ Services 資料已從後台載入:', formattedServices.length, '筆');
-        } else {
-          // 使用預設資料
-          setServices(defaultServices);
+        // 獲取服務列表
+        const servicesRes = await fetch('/api/services?populate=*&sort=sort_order:asc');
+        if (servicesRes.ok) {
+          const servicesResult = await servicesRes.json();
+          if (servicesResult.data && servicesResult.data.length > 0) {
+            const formattedServices = servicesResult.data.map((item: any) => ({
+              id: item.id,
+              title: item.title || '',
+              description: item.description || '',
+              icon: item.icon || 'precision_manufacturing',
+              features: item.features || []
+            }));
+            setServices(formattedServices);
+          }
+        }
+
+        // 獲取服務頁面內容
+        const pageRes = await fetch('/api/service-page?populate=*');
+        if (pageRes.ok) {
+          const pageResult = await pageRes.json();
+          if (pageResult.data) {
+            let introductionHTML = '';
+            if (pageResult.data.introduction) {
+              if (typeof pageResult.data.introduction === 'string') {
+                introductionHTML = pageResult.data.introduction;
+              } else if (Array.isArray(pageResult.data.introduction)) {
+                const introductionText = pageResult.data.introduction
+                  .map((block: any) => {
+                    if (block.type === 'paragraph' && block.children) {
+                      return block.children.map((child: any) => child.text || '').join('');
+                    }
+                    return '';
+                  })
+                  .filter((text: string) => text)
+                  .join('\n\n');
+                introductionHTML = introductionText;
+              }
+            }
+            setPageData({
+              title: pageResult.data.title || 'SERVICE 服務',
+              subtitle: pageResult.data.subtitle || '專業製造服務，滿足您的各種需求',
+              introduction: introductionHTML
+            });
+          }
         }
       } catch (error) {
-        console.error('❌ Services API 錯誤:', error);
-        setServices(defaultServices);
+        console.error('❌ API 錯誤:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchServices();
+    fetchData();
   }, []);
-
-  const defaultServices = [
-    {
-      icon: 'precision_manufacturing',
-      title: 'CNC 精密加工',
-      description: '採用最先進的CNC加工設備，提供高精度、高效率的零件加工服務。',
-      features: [
-        '3軸、4軸、5軸CNC加工',
-        '精度可達±0.005mm',
-        '支援多種材質加工',
-        '小批量到大批量生產'
-      ]
-    },
-    {
-      icon: 'image',
-      title: '銘板製作',
-      description: '專業的銘板設計與製造服務，包含蝕刻、印刷、沖壓等多種工藝。',
-      features: [
-        '金屬蝕刻銘板',
-        '絲印/移印銘板',
-        '陽極氧化處理',
-        '客製化設計服務'
-      ]
-    },
-    {
-      icon: 'category',
-      title: '陽極處理',
-      description: '提供專業的鋁材陽極氧化處理服務，增強產品耐用性與美觀性。',
-      features: [
-        '多種顏色選擇',
-        '硬質陽極處理',
-        '環保無污染工藝',
-        '耐腐蝕、耐磨損'
-      ]
-    },
-    {
-      icon: 'construction',
-      title: '模具設計與製造',
-      description: '從設計到製造一站式模具服務，確保產品品質與生產效率。',
-      features: [
-        '3D模具設計',
-        '快速打樣',
-        '精密模具製造',
-        '模具維修保養'
-      ]
-    },
-    {
-      icon: 'build_circle',
-      title: '組裝服務',
-      description: '提供專業的組裝服務，從零件到成品一條龍解決方案。',
-      features: [
-        '產品組裝',
-        '功能測試',
-        '品質檢驗',
-        '包裝出貨'
-      ]
-    },
-    {
-      icon: 'design_services',
-      title: '客製化設計',
-      description: '專業的工程團隊提供客製化設計服務，滿足特殊需求。',
-      features: [
-        '產品設計諮詢',
-        '工程圖面繪製',
-        '材料選擇建議',
-        '製程優化方案'
-      ]
-    }
-  ];
 
   if (loading) {
     return (
@@ -130,21 +92,25 @@ const ServicePage: React.FC = () => {
       </PageLayout>
     );
   }
+  
+  if (!pageData) return null;
 
   return (
     <PageLayout 
-      title="SERVICE 服務" 
-      subtitle="專業製造服務，滿足您的各種需求"
+      title={pageData?.title || "SERVICE 服務"}
+      subtitle={pageData?.subtitle || "專業製造服務，滿足您的各種需求"}
       breadcrumbs={breadcrumbs}
     >
       <div className="space-y-16">
         {/* Introduction */}
-        <section className="text-center max-w-3xl mx-auto">
-          <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
-            威宇整合提供全方位的精密製造服務，從設計、加工到表面處理，我們擁有完整的生產鏈和專業團隊。
-            無論是單件客製化還是大批量生產，我們都能提供最優質的解決方案。
-          </p>
-        </section>
+        {pageData?.introduction && (
+          <section className="text-center max-w-3xl mx-auto">
+            <div 
+              className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: pageData.introduction }}
+            />
+          </section>
+        )}
 
         {/* Services Grid */}
         <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

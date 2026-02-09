@@ -4,7 +4,10 @@ import PageLayout from '../shared/PageLayout';
 interface AboutPageData {
   title: string;
   subtitle: string;
-  introduction: any; // blocks 编辑器返回对象或字符串
+  introduction: any;
+  image_main?: {
+    url: string;
+  };
   stat_years: number;
   stat_projects: number;
   stat_quality: number;
@@ -39,13 +42,15 @@ const AboutPage: React.FC = () => {
         console.log('About Page API Response:', result);
         
         if (result.data) {
-          // 提取 blocks 编辑器的纯文本
-          let introductionText = '';
+          // 保留 CKEditor HTML 完整樣式
+          let introductionHTML = '';
           if (result.data.introduction) {
             if (typeof result.data.introduction === 'string') {
-              introductionText = result.data.introduction;
+              // CKEditor 返回 HTML 字符串，直接使用
+              introductionHTML = result.data.introduction;
             } else if (Array.isArray(result.data.introduction)) {
-              introductionText = result.data.introduction
+              // Blocks 编辑器返回对象数组（兼容舊格式）
+              const introductionText = result.data.introduction
                 .map((block: any) => {
                   if (block.type === 'paragraph' && block.children) {
                     return block.children.map((child: any) => child.text || '').join('');
@@ -54,16 +59,18 @@ const AboutPage: React.FC = () => {
                 })
                 .filter((text: string) => text)
                 .join('\n\n');
+              introductionHTML = introductionText;
             }
           }
           
           setPageData({
-            title: result.data.title || 'ABOUT US 關於威宇',
-            subtitle: result.data.subtitle || 'Precision Engineering Excellence Since 2006',
-            introduction: introductionText,
-            stat_years: result.data.stat_years || 30,
-            stat_projects: result.data.stat_projects || 500,
-            stat_quality: result.data.stat_quality || 100,
+            title: result.data.title || '',
+            subtitle: result.data.subtitle || '',
+            introduction: introductionHTML,
+            image_main: result.data.image_main,
+            stat_years: result.data.stat_years || 0,
+            stat_projects: result.data.stat_projects || 0,
+            stat_quality: result.data.stat_quality || 0,
             core_values: result.data.core_values || [],
             certifications: result.data.certifications || []
           });
@@ -71,14 +78,13 @@ const AboutPage: React.FC = () => {
         }
       } catch (error) {
         console.error('❌ About Page API 錯誤:', error);
-        // 使用預設資料
         setPageData({
-          title: 'ABOUT US 關於威宇',
-          subtitle: 'Precision Engineering Excellence Since 2006',
-          introduction: '威宇整合成立於2006年，專注於高品質銘板設計與精密CNC製造。',
-          stat_years: 30,
-          stat_projects: 500,
-          stat_quality: 100,
+          title: '',
+          subtitle: '',
+          introduction: '',
+          stat_years: 0,
+          stat_projects: 0,
+          stat_quality: 0,
           core_values: [],
           certifications: []
         });
@@ -110,45 +116,46 @@ const AboutPage: React.FC = () => {
     >
       <div className="space-y-16">
         {/* Company Introduction */}
-        <section>
-          <h2 className="text-3xl font-bold mb-6 text-accent">公司簡介</h2>
-          <div className="grid lg:grid-cols-2 gap-8 items-center">
-            <div className="space-y-4 text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">
-              {pageData.introduction || '威宇整合成立於2006年，專注於高品質銘板設計與精密CNC製造。'}
-            </div>
-            <div className="rounded-3xl overflow-hidden shadow-xl">
-              <img 
-                src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&h=600&fit=crop" 
-                alt="威宇整合工廠"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-        </section>
+        {pageData.introduction && (
+          <section>
+            <div 
+              className="space-y-4 text-slate-600 dark:text-slate-400 leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: pageData.introduction }}
+            />
+          </section>
+        )}
 
         {/* Company Statistics */}
-        <section className="bg-secondary dark:bg-slate-900 rounded-3xl p-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="space-y-2">
-              <div className="text-5xl font-bold text-accent mb-2">{pageData.stat_years}+</div>
-              <div className="text-slate-600 dark:text-slate-400 uppercase tracking-wider text-sm">
-                Years Experience
-              </div>
+        {(pageData.stat_years > 0 || pageData.stat_projects > 0 || pageData.stat_quality > 0) && (
+          <section className="bg-secondary dark:bg-slate-900 rounded-3xl p-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+              {pageData.stat_years > 0 && (
+                <div className="space-y-2">
+                  <div className="text-5xl font-bold text-accent mb-2">{pageData.stat_years}+</div>
+                  <div className="text-slate-600 dark:text-slate-400 uppercase tracking-wider text-sm">
+                    Years Experience
+                  </div>
+                </div>
+              )}
+              {pageData.stat_projects > 0 && (
+                <div className="space-y-2">
+                  <div className="text-5xl font-bold text-accent mb-2">{pageData.stat_projects}+</div>
+                  <div className="text-slate-600 dark:text-slate-400 uppercase tracking-wider text-sm">
+                    Projects & Clients
+                  </div>
+                </div>
+              )}
+              {pageData.stat_quality > 0 && (
+                <div className="space-y-2">
+                  <div className="text-5xl font-bold text-accent mb-2">{pageData.stat_quality}%</div>
+                  <div className="text-slate-600 dark:text-slate-400 uppercase tracking-wider text-sm">
+                    Quality Assurance
+                  </div>
+                </div>
+              )}
             </div>
-            <div className="space-y-2">
-              <div className="text-5xl font-bold text-accent mb-2">{pageData.stat_projects}+</div>
-              <div className="text-slate-600 dark:text-slate-400 uppercase tracking-wider text-sm">
-                Projects & Clients
-              </div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-5xl font-bold text-accent mb-2">{pageData.stat_quality}%</div>
-              <div className="text-slate-600 dark:text-slate-400 uppercase tracking-wider text-sm">
-                Quality Assurance
-              </div>
-            </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* Core Values */}
         {pageData.core_values && pageData.core_values.length > 0 && (

@@ -57,31 +57,16 @@ const ProcessPage: React.FC = () => {
           }
           
           setPageData({
-            title: result.data.title || 'PROCESS 製程',
-            subtitle: result.data.subtitle || '完善的生產流程，確保產品品質',
+            title: result.data.title || '',
+            subtitle: result.data.subtitle || '',
             introduction: introductionText,
-            process_steps: result.data.process_steps || defaultProcesses,
-            manufacturing_capabilities: result.data.manufacturing_capabilities || defaultCapabilities
+            process_steps: result.data.process_steps || [],
+            manufacturing_capabilities: result.data.manufacturing_capabilities || []
           });
           console.log('✅ Process Page 資料已從後台載入');
-        } else {
-          setPageData({
-            title: 'PROCESS 製程',
-            subtitle: '完善的生產流程，確保產品品質',
-            introduction: '威宇整合擁有完整的生產製程能力，從設計到交付，每個環節都嚴格把關。',
-            process_steps: defaultProcesses,
-            manufacturing_capabilities: defaultCapabilities
-          });
         }
       } catch (error) {
         console.error('❌ Process Page API 錯誤:', error);
-        setPageData({
-          title: 'PROCESS 製程',
-          subtitle: '完善的生產流程，確保產品品質',
-          introduction: '威宇整合擁有完整的生產製程能力，從設計到交付，每個環節都嚴格把關。',
-          process_steps: defaultProcesses,
-          manufacturing_capabilities: defaultCapabilities
-        });
       } finally {
         setLoading(false);
       }
@@ -89,129 +74,7 @@ const ProcessPage: React.FC = () => {
 
     fetchProcessPage();
   }, []);
-
-  const defaultProcesses = [
-    {
-      step: '01',
-      title: '需求分析與諮詢',
-      description: '深入了解客戶需求，提供專業的技術諮詢與可行性評估。',
-      icon: 'chat',
-      details: [
-        '產品功能需求分析',
-        '技術可行性評估',
-        '材料選擇建議',
-        '成本預算評估'
-      ]
-    },
-    {
-      step: '02',
-      title: '設計與工程',
-      description: '專業團隊進行產品設計，包含3D建模、工程圖面繪製等。',
-      icon: 'design_services',
-      details: [
-        '3D產品建模',
-        '工程圖面繪製',
-        '模具設計',
-        '製程規劃'
-      ]
-    },
-    {
-      step: '03',
-      title: '打樣與確認',
-      description: '快速打樣，讓客戶確認產品外觀、尺寸、功能等細節。',
-      icon: 'science',
-      details: [
-        '快速打樣製作',
-        '功能測試驗證',
-        '尺寸精度檢驗',
-        '外觀品質確認'
-      ]
-    },
-    {
-      step: '04',
-      title: '生產製造',
-      description: '使用先進設備進行批量生產，嚴格控管品質與進度。',
-      icon: 'precision_manufacturing',
-      details: [
-        'CNC精密加工',
-        '模具射出成型',
-        '沖壓與折彎',
-        '雷射切割'
-      ]
-    },
-    {
-      step: '05',
-      title: '表面處理',
-      description: '提供多種表面處理工藝，提升產品耐用性與美觀度。',
-      icon: 'color_lens',
-      details: [
-        '陽極氧化處理',
-        '電鍍表面處理',
-        '噴塗與烤漆',
-        '絲印/移印'
-      ]
-    },
-    {
-      step: '06',
-      title: '品質檢驗',
-      description: '嚴格的品質管控系統，確保每件產品都符合標準。',
-      icon: 'verified',
-      details: [
-        '尺寸精度測量',
-        '外觀品質檢查',
-        '功能性測試',
-        '出貨前終檢'
-      ]
-    },
-    {
-      step: '07',
-      title: '組裝與包裝',
-      description: '專業的組裝與包裝服務，確保產品安全送達。',
-      icon: 'inventory_2',
-      details: [
-        '零件組裝',
-        '功能測試',
-        '防護包裝',
-        '標籤貼附'
-      ]
-    },
-    {
-      step: '08',
-      title: '交付與售後',
-      description: '準時交貨並提供完善的售後服務與技術支援。',
-      icon: 'local_shipping',
-      details: [
-        '準時出貨',
-        '物流追蹤',
-        '售後服務',
-        '技術支援'
-      ]
-    }
-  ];
-
-  const defaultCapabilities = [
-    {
-      icon: 'precision_manufacturing',
-      title: 'CNC 加工',
-      items: ['3軸/4軸/5軸CNC', '車床加工', '銑床加工', '精度±0.005mm']
-    },
-    {
-      icon: 'image',
-      title: '銘板製作',
-      items: ['金屬蝕刻', '絲印/移印', '雷射雕刻', '沖壓成型']
-    },
-    {
-      icon: 'palette',
-      title: '表面處理',
-      items: ['陽極氧化', '電鍍處理', '噴塗烤漆', '拉絲/拋光']
-    },
-    {
-      icon: 'build',
-      title: '模具製造',
-      items: ['模具設計', '模具製作', '試模調整', '模具維護']
-    }
-  ];
-
+  
   if (loading) {
     return (
       <PageLayout title="PROCESS 製程" subtitle="完善的生產流程，確保產品品質" breadcrumbs={breadcrumbs}>
@@ -235,14 +98,17 @@ const ProcessPage: React.FC = () => {
     >
       <div className="space-y-16">
         {/* Introduction */}
-        <section className="text-center max-w-3xl mx-auto">
-          <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
-            {pageData.introduction || '威宇整合擁有完整的生產製程能力，從設計到交付，每個環節都嚴格把關。'}
-          </p>
-        </section>
+        {pageData.introduction && (
+          <section className="text-center max-w-3xl mx-auto">
+            <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+              {pageData.introduction}
+            </p>
+          </section>
+        )}
 
         {/* Process Steps */}
-        <section>
+        {pageData.process_steps.length > 0 && (
+          <section>
           <h2 className="text-3xl font-bold mb-12 text-accent text-center">生產流程</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {processes.map((process, index) => (
@@ -272,8 +138,10 @@ const ProcessPage: React.FC = () => {
             ))}
           </div>
         </section>
+        )}
 
         {/* Manufacturing Capabilities */}
+        {pageData.manufacturing_capabilities.length > 0 && (
         <section className="bg-secondary dark:bg-slate-900 rounded-3xl p-12">
           <h2 className="text-3xl font-bold mb-8 text-accent text-center">製造能力</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -294,6 +162,7 @@ const ProcessPage: React.FC = () => {
             ))}
           </div>
         </section>
+        )}
 
         {/* Quality Control */}
         <section>
