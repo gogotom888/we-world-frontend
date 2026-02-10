@@ -108,12 +108,12 @@ const About: React.FC = () => {
               {aboutData.description}
             </p>
             
-            <button className="flex items-center gap-4 text-primary hover:text-hover-blue transition-colors group">
+            <a href="/about" className="flex items-center gap-4 text-primary hover:text-hover-blue transition-colors group">
               <span className="text-lg md:text-xl lg:text-2xl font-light tracking-wide">Read more</span>
               <div className="w-12 h-12 md:w-14 md:h-14 bg-primary group-hover:bg-hover-blue rounded-full flex items-center justify-center transition-all group-hover:scale-110">
                 <span className="material-icons text-white text-2xl md:text-3xl">arrow_forward</span>
               </div>
-            </button>
+            </a>
             
             <div className="mt-12 pt-8 border-t border-text-gray/20">
               <div className="flex flex-row gap-8 sm:gap-12 lg:gap-20">

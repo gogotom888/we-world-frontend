@@ -27,18 +27,24 @@ const News: React.FC = () => {
         
         if (result.data && result.data.length > 0) {
           const formattedNews = result.data.slice(0, 3).map((item: any) => {
-            // 提取 blocks 编辑器的纯文本
+            // 提取 CKEditor HTML 內容
             let contentText = '';
-            if (item.content && Array.isArray(item.content)) {
-              contentText = item.content
-                .map((block: any) => {
-                  if (block.type === 'paragraph' && block.children) {
-                    return block.children.map((child: any) => child.text || '').join('');
-                  }
-                  return '';
-                })
-                .filter((text: string) => text)
-                .join(' ');
+            if (item.content) {
+              if (typeof item.content === 'string') {
+                // HTML 字串，移除標籤提取純文字
+                contentText = item.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+              } else if (Array.isArray(item.content)) {
+                // blocks 編輯器格式
+                contentText = item.content
+                  .map((block: any) => {
+                    if (block.type === 'paragraph' && block.children) {
+                      return block.children.map((child: any) => child.text || '').join('');
+                    }
+                    return '';
+                  })
+                  .filter((text: string) => text)
+                  .join(' ');
+              }
             }
             
             return {
